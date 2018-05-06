@@ -1,0 +1,158 @@
+openapi: 3.0.1
+info:
+  title: APIs complémentaires pour API Entreprise
+  description: >-
+    # Introduction
+
+    Ces APIs fournissent des services complémentaires à API Entreprise telle que
+      - l'état en temps réel des API principale
+      - vos statistiques de consommations
+
+    ## Sous titre
+
+    Plus d'infos
+
+    # Versionnage
+
+    C'est quoi le versionnage
+
+    # Volumétrie
+
+    Vous avez le droit à 1000 requêtes par heure par IP interrogeant nos services.
+
+    # Codes d'erreurs
+
+    ICI
+  contact:
+    name: équipe technique
+    email: tech@entreprise.api.gouv.fr
+  license:
+    name: ???
+    url: https://github.com/etalab/watchdoge_apientreprise/blob/master/LICENSE
+  version: 0.1.0
+servers:
+  - url: https://dashboard.entreprise.api.gouv.fr
+tags:
+  - name: monitoring
+    description: status des différents services API Entreprise
+  - name: stats
+    description: vos statistiques d'utilisations des services API Entreprise
+paths:
+  /api/watchdoge/dashboard/current_status:
+    get:
+      tags:
+        - monitoring
+      summary: Status en temps réel
+      description: status en temps réel de toutes les API Entreprise
+      operationId: current-status
+      responses:
+        '200':
+          description: Status en temps réel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/current_status'
+  /api/watchdoge/dashboard/homepage_status:
+    get:
+      tags:
+        - monitoring
+      summary: Etat général des serveurs API Entreprise
+      description: description ici
+      operationId: homepage-status
+      responses:
+        '200':
+          description: Etat des serveurs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/homepage_status'
+components:
+  schemas:
+    current_status:
+      {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["uname", "name", "provider", "api_version", "code", "timestamp"],
+              "properties": {
+                "uname": {
+                  "type": "string",
+                  "title": "The Unique Name of the endpoint.",
+                  "example": "apie_2_extraits_courts_inpi"
+                },
+                "name": {
+                  "type": "string",
+                  "title": "The Name of the endpoint.",
+                  "example": "Extraits courts INPI"
+                },
+                "provider": {
+                  "type": "string",
+                  "title": "The data provider of the endpoint",
+                  "example": "inpi"
+                },
+                "api_version": {
+                  "type": "integer",
+                  "title": "The api_version of the endpoint",
+                  "minimum": 1,
+                  "maximum": 2,
+                  "example": 2
+                },
+                "code": {
+                  "type": "integer",
+                  "title": "The HTTP Code of the last Ping",
+                  "minimum": 200,
+                  "maximum": 550,
+                  "example": 200
+                },
+                "timestamp": {
+                  "type": "string",
+                  "title": "The Timestamp of the last Ping",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}.\\d{2}:\\d{2}:\\d{2}",
+                  "example": "2018-05-06T09:30:04.053Z"
+                }
+              }
+            }
+          }
+        }
+      }
+    homepage_status:
+      {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "code", "timestamp"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "pattern": "APIE Homepage",
+                  "example": "APIE Homepage"
+                },
+                "code": {
+                  "type": "integer",
+                  "title": "The HTTP Code.",
+                  "minimum": 200,
+                  "maximum": 550,
+                  "example": 200
+                },
+                "timestamp": {
+                  "type": "string",
+                  "title": "The Ping Timestamp",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}.\\d{2}:\\d{2}:\\d{2}",
+                  "example": "2018-05-06T06:38:22.163Z"
+                }
+              }
+            }
+          }
+        }
+      }
+  responses:
+    NotFound:
+      description: 404 Non trouvé
+    UnprocessableEntity:
+      description: 422 - Entité non traitable – Le format de la donnée passée en paramètre n'est pas accepté
